@@ -1,0 +1,254 @@
+<div id="layout-wrapper">
+  <app-header></app-header>
+  <!-- ========== Left Sidebar Start ========== -->
+  <app-sidebar></app-sidebar>
+  <!-- Left Sidebar End -->
+
+  <!-- ============================================================== -->
+  <!-- Start right Content here -->
+  <!-- ============================================================== -->
+  <div class="main-content">
+    <div class="page-content">
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row no-print">
+          <div class="col-12">
+            <div
+              class="page-title-box d-flex align-items-center justify-content-between"
+            >
+              <h4 class="mb-0 cursor">Customer Discount</h4>
+
+              <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                  <li
+                    class="breadcrumb-item pointer active"
+                    (click)="dashboard()"
+                  >
+                    Dashboard
+                  </li>
+                  <li class="breadcrumb-item cursor">Customer Discount</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body no-print">
+              <div class="row">
+                <div class="col-md-2">
+                  <h4 class="mt-2 cursor">Item</h4>
+                </div>
+                <div class="col-md-10">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p-dropdown
+                        [options]="itemLists"
+                        [itemSize]="31"
+                        formControlName="p_item_id"
+                        [filter]="true"
+                        [style]="{
+                          overflow: 'visible',
+                          width: '100%'
+                        }"
+                        autoWidth="true"
+                        appendTo="body"
+                        (onChange)="itemOnChange($event.value)"
+                      ></p-dropdown>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <!-- <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="table-responsive">
+                      <p-table
+                        [scrollable]="true"
+                        [style]="{ width: '100%' }"
+                        #dt1
+                        [value]="invoiceList"
+                        dataKey="id"
+                        [rows]="10"
+                        [showCurrentPageReport]="true"
+                        [rowsPerPageOptions]="[10, 25, 50]"
+                        styleClass="p-datatable-customers p-datatable-gridlines p-datatable-responsive-demo"
+                        [paginator]="true"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                      >
+                        <ng-template pTemplate="colgroup" let-columns>
+                          <colgroup>
+                            <col style="width: 80px" />
+                            <col style="width: 163px" />
+                            <col style="width: 155px" />
+                            <col style="width: 180px" />
+                            <col style="width: 160px" />
+                            <col style="width: 110px" />
+                            <col style="width: 130px" />
+                            <col style="width: 173px" />
+                            <col style="width: 123px" />
+                          </colgroup>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th>
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                S.NO
+                              </div>
+                            </th>
+  
+                            <th>
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                Customer
+                                <p-columnFilter
+                                  type="text"
+                                  field="client"
+                                  display="menu"
+                                ></p-columnFilter>
+                              </div>
+                            </th>
+  
+                            <th>
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                Discount
+                                <p-columnFilter
+                                  type="text"
+                                  field="order_number"
+                                  display="menu"
+                                ></p-columnFilter>
+                              </div>
+                            </th>
+                            <th>
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                Item
+                          <p-columnFilter
+                                        type="text"
+                                        field="original_amount"
+                                        display="menu"
+                                      ></p-columnFilter>
+                              </div>
+                            </th>
+                            <th>
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                Description
+  
+                  <p-columnFilter
+                                        type="text"
+                                        field="outstanding_amount"
+                                        display="menu"
+                                      ></p-columnFilter>
+                              </div>
+                            </th>
+  
+                            <th>
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                UOM
+  
+                                <p-columnFilter
+                                        type="number"
+                                        field="paid_amount"
+                                        display="menu"
+                                      ></p-columnFilter> 
+                              </div>
+                            </th>
+  
+                            <th>
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                Unit Price
+                              <p-columnFilter
+                                        type="text"
+                                        field="traction_date"
+                                        display="menu"
+                                      ></p-columnFilter> 
+                              </div>
+                            </th>
+                          </tr>
+                        </ng-template>
+  
+                        <ng-template
+                          pTemplate="body"
+                          let-invoiceList
+                          let-i="rowIndex"
+                        >
+                          <tr>
+                            <td>{{ invoiceList.CUSTOMER_NUMBER }}</td>
+                            <td>{{ invoiceList.CUSTOMER_NAME }}</td>
+                            <td>{{ invoiceList.PRICE_LIST }}</td>
+                            <td>{{ invoiceList.ITEM }}</td>
+                            <td>{{ invoiceList.DESCRIPTION }}</td>
+                            <td>{{ invoiceList.UOM }}</td>
+                            <td>{{ invoiceList.UNIT_PRICEs }}</td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                          <tr *ngIf="!spinner">
+                            <td colspan="9" style="text-align: center">
+                              No Date found
+                            </td>
+                          </tr>
+                          <tr *ngIf="spinner">
+                            <td colspan="9" style="text-align: center">
+                              <p-progressSpinner
+                                [style]="{ width: '60px', height: '70px' }"
+                                strokeWidth="4"
+                              ></p-progressSpinner>
+                            </td>
+                          </tr>
+                        </ng-template>
+                      </p-table>
+  
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+
+          <div class="row">
+            <div class="col-md-6" *ngFor="let item of invoiceList">
+              <div class="card1">
+                <div
+                  class="card-header"
+                  style="
+                    background-color: black;
+                    color: #fff;
+                    text-align: center;
+                  "
+                >
+                  {{ item.ACCOUNT_NUMBER }} -
+                  {{ item.CUSTOMER_NAME }}
+                </div>
+                <div class="card-body">
+                  <span class="hea"> DISCOUNTED PRICE</span>:  <span class="bod"> {{ item.DISCOUNTED_PRICE }}</span> <br />
+                  <span class="hea"> ITEM CODE</span>: <span class="bod"> {{ item.ITEM_CODE }}</span> <br />
+                  <span class="hea"> LIST LINE TYPE</span>: <span class="bod"> {{ item.LIST_LINE_TYPE }}</span> <br />
+                  <span class="hea"> MODIFIER DESCRIPTION</span>: <span class="bod"> {{ item.MODIFIER_DESCRIPTION }}</span> <br />
+                  <span class="hea"> MODIFIER NAME</span>: <span class="bod"> {{ item.MODIFIER_NAME }}</span>  <br />
+                  <span class="hea"> MODIFIER PRODUCT UOM CODE</span>: <span class="bod"> {{ item.MODIFIER_PRODUCT_UOM_CODE }}</span>  <br />
+                  <!-- <span class="hea"> PARTY ID</span>: <span class="bod"> {{ item.PARTY_ID }}</span>  <br />
+                  <span class="hea"> PRODUCT ATTRIBUTE CONTEXT</span>: <span class="bod"> {{ item.PRODUCT_ATTRIBUTE_CONTEXT }}</span> <br /> 
+                  <span class="hea"> START DATE ACTIVE</span>: <span class="bod"> {{ item.START_DATE_ACTIVE | date }}</span> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+  </div>
+  <!-- end main content-->
+</div>
+<!-- END layout-wrapper -->
+<!-- Button trigger modal -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>

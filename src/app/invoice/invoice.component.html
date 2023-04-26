@@ -1,0 +1,288 @@
+<div id="layout-wrapper">
+  <app-header></app-header>
+  <!-- ========== Left Sidebar Start ========== -->
+  <app-sidebar></app-sidebar>
+  <!-- Left Sidebar End -->
+
+  <!-- ============================================================== -->
+  <!-- Start right Content here -->
+  <!-- ============================================================== -->
+  <div class="main-content">
+    <div class="page-content">
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row no-print">
+          <div class="col-12">
+            <div
+              class="
+                page-title-box
+                d-flex
+                align-items-center
+                justify-content-between
+              "
+            >
+              <h4 class="mb-0 cursor">Invoice</h4>
+
+              <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                  <li
+                    class="breadcrumb-item pointer active"
+                    (click)="dashboard()"
+                  >
+                    Dashboard
+                  </li>
+                  <li class="breadcrumb-item cursor">Invoice</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body no-print">
+              <div class="row">
+                <div class="col-md-2">
+                  <h4 class="mt-2 cursor">Invoices</h4>
+                </div>
+                <div class="col-md-10">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <p-calendar
+                        [(ngModel)]="fromDate"
+                        [showIcon]="true"
+                        inputId="icon"
+                        class="m-1"
+                      ></p-calendar>
+                      <p-calendar
+                        [(ngModel)]="toDate"
+                        (onSelect)="dateC($event)"
+                        [showIcon]="true"
+                        inputId="icon"
+                        class="m-1"
+                      ></p-calendar>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <p-table
+                      [scrollable]="true"
+                      [style]="{ width: '100%' }"
+                      #dt1
+                      [value]="invoiceList"
+                      dataKey="id"
+                      [rows]="10"
+                      [showCurrentPageReport]="true"
+                      [rowsPerPageOptions]="[10, 25, 50]"
+                      styleClass="p-datatable-customers p-datatable-gridlines p-datatable-responsive-demo"
+                      [paginator]="true"
+                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    >
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col style="width: 80px" />
+                           <col style="width: 163px" />
+                          <col style="width: 155px" />
+                           <col style="width: 180px" />
+                          <col style="width: 160px" />
+                          <col style="width: 110px" />
+                          <col style="width: 130px" />
+                          <col style="width: 173px" />
+                          <col style="width: 123px" />
+                          <col style="width: 123px" />
+                          <col style="width: 123px" />
+                          <col style="width: 123px" />
+                          <col style="width: 123px" />
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              S.NO
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Invoice No
+                              <p-columnFilter
+                                type="text"
+                                field="invoice_no"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Customer
+                              <p-columnFilter
+                                type="text"
+                                field="client"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Order Number
+                              <p-columnFilter
+                                type="text"
+                                field="order_number"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Original Amount
+                              <!-- <p-columnFilter
+                                    type="text"
+                                    field="original_amount"
+                                    display="menu"
+                                  ></p-columnFilter> -->
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Amount
+
+                              <!-- <p-columnFilter
+                                    type="text"
+                                    field="outstanding_amount"
+                                    display="menu"
+                                  ></p-columnFilter> -->
+                            </div>
+                          </th>
+
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Paid Amount
+
+                              <!-- <p-columnFilter
+                                    type="number"
+                                    field="paid_amount"
+                                    display="menu"
+                                  ></p-columnFilter> -->
+                            </div>
+                          </th>
+
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Transaction Date
+                              <!-- <p-columnFilter
+                                    type="text"
+                                    field="traction_date"
+                                    display="menu"
+                                  ></p-columnFilter> -->
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Due Date
+                              
+                            </div>
+                          </th>
+
+                          <!-- new -->
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Vehicle Number
+                              
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Transpoter Name
+                              
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              LR Number
+                              
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              LR Date
+                              
+                            </div>
+                          </th>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template
+                        pTemplate="body"
+                        let-invoiceList
+                        let-i="rowIndex"
+                      >
+                        <tr>
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            {{ invoiceList.invoice_no ? invoiceList.invoice_no : '-' }}
+                          </td>
+                          <td>{{ invoiceList.client }}</td>
+
+                          <td>
+                            {{ invoiceList.order_number ? invoiceList.order_number : '-' }}
+                          </td>
+                          <td>
+                            {{ invoiceList.original_amount | number: "1.2" }}
+                          </td>
+                          <td>
+                            {{ invoiceList.outstanding_amount | number: "1.2" }}
+                          </td>
+                          <td>{{ invoiceList.paid_amount | number: "1.2" }}</td>
+                          <td>{{ invoiceList.traction_date | date }}</td>
+                          <td>{{ invoiceList.due_date | date }}</td>
+                          <td>{{ invoiceList.vehicle_number}}</td>
+                          <td>{{ invoiceList.transporter_name }}</td>
+                          <td>{{ invoiceList.lr_no }}</td>
+                          <td>{{ invoiceList.lr_date | date }}</td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="emptymessage">
+                        <tr *ngIf="!spinner">
+                          <td colspan="9" style="text-align: center">
+                            No Date found
+                          </td>
+                        </tr>
+                        <tr *ngIf="spinner">
+                          <td colspan="9" style="text-align: center">
+                            <p-progressSpinner
+                              [style]="{ width: '60px', height: '70px' }"
+                              strokeWidth="4"
+                            ></p-progressSpinner>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+  </div>
+  <!-- end main content-->
+</div>
+<!-- END layout-wrapper -->
+<!-- Button trigger modal -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>

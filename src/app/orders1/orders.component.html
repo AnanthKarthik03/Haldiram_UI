@@ -1,0 +1,1075 @@
+<div id="layout-wrapper">
+  <app-header></app-header>
+  <!-- ========== Left Sidebar Start ========== -->
+  <app-sidebar></app-sidebar>
+  <!-- Left Sidebar End -->
+
+  <!-- ============================================================== -->
+  <!-- Start right Content here -->
+  <!-- ============================================================== -->
+  <div class="main-content">
+    <div class="page-content">
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row no-print">
+          <div class="col-12">
+            <div
+              class="
+                page-title-box
+                d-flex
+                align-items-center
+                justify-content-between
+              "
+            >
+              <h4 class="mb-0 cursor">Orders Details</h4>
+
+              <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                  <li
+                    class="breadcrumb-item pointer active"
+                    (click)="dashboard()"
+                  >
+                    Dashboard
+                  </li>
+                  <li class="breadcrumb-item cursor">Orders</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body no-print">
+              <div class="row">
+                <div class="col-md-2">
+                  <h4 class="mt-2 cursor">Orders</h4>
+                </div>
+                <div class="col-md-10">
+                  <div class="row">
+                    <div class="col-md-8" *ngIf="!addForm">
+                      <p-calendar
+                        [(ngModel)]="fromDate"
+                        [showIcon]="true"
+                        inputId="icon"
+                        class="m-1"
+                      ></p-calendar>
+                      <p-calendar
+                        [(ngModel)]="toDate"
+                        (onSelect)="dateChange()"
+                        [showIcon]="true"
+                        inputId="icon"
+                        class="m-1"
+                      ></p-calendar>
+                    </div>
+                    <div class="col-md-4">
+                      <button
+                        *ngIf="!addForm"
+                        type="button"
+                        class="btn btn-primary m-1"
+                      >
+                        PDF
+                      </button>
+                      <button
+                        *ngIf="!addForm"
+                        type="button"
+                        class="btn btn-primary m-1"
+                      >
+                        Excel
+                      </button>
+                      <button
+                        *ngIf="!addForm"
+                        type="button"
+                        class="btn btn-info"
+                        (click)="newOrder()"
+                      >
+                        New Order
+                      </button>
+                    </div>
+                    <div class="col-md-12">
+                      <button
+                        style="float: right"
+                        *ngIf="addForm"
+                        type="button"
+                        class="btn btn-warning pull-right"
+                        (click)="back()"
+                      >
+                        Back
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!addForm" class="col-md-12">
+          <div class="card" *ngIf="!salePrint">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <p-table
+                      [scrollable]="true"
+                      [style]="{ width: '100%' }"
+                      #dt1
+                      [value]="orderList"
+                      dataKey="id"
+                      [rows]="10"
+                      [showCurrentPageReport]="true"
+                      [rowsPerPageOptions]="[10, 25, 50]"
+                      styleClass="p-datatable-customers p-datatable-gridlines p-datatable-responsive-demo"
+                      [paginator]="true"
+                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    >
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col style="width: 90px" />
+                          <!-- <col style="width: 190px" /> -->
+                          <col style="width: 183px" />
+                          <col style="width: 190px" />
+                          <!-- <col style="width: 166px" /> -->
+                          <!-- <col style="width: 212px" /> -->
+                          <col style="width: 200px" />
+                          <col style="width: 170px" />
+                          <col style="width: 178px" />
+                          <col style="width: 185px" />
+                          <col style="width: 123px" />
+                          <col style="width: 203px" />
+                          <col style="width: 123px" />
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              S.NO
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Order Number</label>
+                              <p-columnFilter
+                                type="text"
+                                field="ORD_NUM"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Order Type</label>
+                              <p-columnFilter
+                                type="text"
+                                field="ORD_TYP"
+                                display="menu"
+                              >
+                              </p-columnFilter>
+                            </div>
+                          </th>
+                          <!-- <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Item Number</label>
+                              <p-columnFilter
+                                type="text"
+                                field="ORDERED_ITEM"
+                                display="menu"
+                              >
+                              </p-columnFilter>
+                            </div>
+                          </th> -->
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Ordered Date</label>
+                            </div>
+                          </th>
+                          <!-- <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Shipment Date</label>
+                            </div>
+                          </th> -->
+                          <!-- <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Quantity</label>
+                              <p-columnFilter
+                                type="text"
+                                field="ORDERED_QUANTITY"
+                                display="menu"
+                              >
+                              </p-columnFilter>
+                            </div>
+                          </th> -->
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Amount</label>
+                              <p-columnFilter
+                                type="text"
+                                field="TOTAL_AMOUNT"
+                                display="menu"
+                              >
+                              </p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Product Type</label>
+                              <p-columnFilter
+                                type="text"
+                                field="TYPE"
+                                display="menu"
+                              >
+                              </p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Ship To</label>
+                              <p-columnFilter
+                                type="text"
+                                field="SHIP_TO_LOCATION_NAME"
+                                display="menu"
+                              >
+                              </p-columnFilter>
+                            </div>
+                          </th>
+
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor"> Status</label>
+                              <p-columnFilter
+                                type="text"
+                                field="HDR_FLOW_STATUS"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor">Sales Order Report</label>
+                            </div>
+                          </th>
+
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              <label class="cursor">Action</label>
+                            </div>
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template
+                        pTemplate="body"
+                        let-orderList
+                        let-i="rowIndex"
+                      >
+                        <tr>
+                          <td>{{ i + 1 }}</td>
+                          <!-- <td>
+                          {{ getCustomerName(orderList.SOLD_TO_ORG_ID) }}
+                        </td> -->
+
+                          <td>{{ orderList.ORD_NUM }}</td>
+                          <td>{{ orderList.ORD_TYP }}</td>
+                          <!-- <td>{{ orderList.ORDERED_ITEM }}</td> -->
+                          <!-- <td>{{ orderList.ITEM }}</td> -->
+                          <td>{{ orderList.ORDERED_DATE }}</td>
+                          <!-- <td>
+                          {{ orderList.SHIPPED_DATE }}
+                        </td> -->
+
+                          <!-- <td>
+                            {{ orderList.ORDERED_QUANTITY | number: "1.2" }}
+                          </td> -->
+                          <td>
+                            {{ getTotalAmount(orderList.ORD_NUM) }}
+                          </td>
+                          <td>
+                            {{ orderList.ATTRIBUTE3 === "0" ? "Bags" : "Bulk" }}
+                          </td>
+                          <td>
+                            {{ orderList.SHIP_TO_LOCATION_NAME }}
+                          </td>
+
+                          <td>
+                            {{ orderList.HDR_FLOW_STATUS }}
+                          </td>
+                          <td>
+                            <button
+                               class="btn btn-primary"
+                              (click)="saleYesPrint(orderList.ORD_NUM)"
+                            >
+                              Generate
+                            </button>
+                            &nbsp;&nbsp;
+                            <!-- href="http://192.168.1.106/customPortal/statements/XXHBL_SO_ONHAND_PRINT_{{getRId(orderList.ORD_NUM)}}_1.PDF" -->
+                            <a
+                            (click) = "getPdfOut(orderList.ORD_NUM)"
+                              class="btn btn-success"
+                               >View</a
+                            >
+                          </td>
+
+                          <td>
+                            <button
+                              class="btn btn-primary"
+                              title="View"
+                              (click)="showModalDialog(orderList.ORD_NUM)"
+                            >
+                              <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                            <!-- <button
+                              class="btn btn-primary"
+                              (click)="saleYesPrint(orderList.ORD_NUM)"
+                              style="position: relative; left: 10px"
+                            >
+                              <i class="uil-invoice"></i>
+                            </button> -->
+                          </td>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td colspan="15" style="text-align: center">
+                            No Data Found
+                          </td>
+                        </tr>
+                        <!-- <tr *ngIf="spinner">
+                        <td colspan="7" style="text-align: center">
+                          <div
+                            class="col-md-12 text-center"
+                            *ngIf="spinner"
+                            style="display: block"
+                          >
+                            <i class="fa fa-spinner fa-spin fa-2x"></i>
+                          </div>
+                        </td>
+                      </tr> -->
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card" *ngIf="salePrint">
+            <div class="card-body">
+              <div class="col-md-12">
+                <!-- <button
+                  style="float: right"
+                  type="button"
+                  class="btn btn-warning pull-right"
+                  (click)="saleNoPrint()"
+                >
+                  Back
+                </button> -->
+                <div class="container-fluid mt-2">
+                  <!-- start page title -->
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="text-center"></div>
+                    </div>
+                  </div>
+                  <!-- end page title -->
+
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="">
+                        <div class="">
+                          <div class="invoice-title row">
+                            <div class="col-md-3 col-sm-3 text-center">
+                              <div class="">
+                                <img
+                                  src="assets/images/halidiram.png"
+                                  alt="logo"
+                                  class="img-fluid"
+                                />
+                              </div>
+                            </div>
+                            <div class="col-md-8 col-sm-8 text-center">
+                              <h5 class="mb-2">SALES ORDER</h5>
+                              <div>
+                                <p class="mb-1">
+                                  <b><u>Haldiram Bhujiawala Limited</u></b>
+                                </p>
+                                <p class="mb-1">
+                                  <i class="uil uil-envelope-alt me-1"></i>
+                                  P-420, Kazi Nazrul Islam Avenue, Kolkata
+                                  -700052
+                                </p>
+                                <p>West Bengal, India</p>
+                              </div>
+                              <div>
+                                <p class="mb-1">
+                                  PAN-AAACH6301A, GSTIN-19AAACH6301A1Z8
+                                </p>
+                                <p class="mb-1">CIN No-U51909WB1992PLC056716</p>
+                                <p>FSSAI No:10016031001907</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <hr />
+
+                          <div class="">
+                            <!-- <div class="col-sm-6">
+                              <div class="text-muted">
+                                <h5 class="font-size-16 mb-3">Billed To:</h5>
+                                <h5 class="font-size-15 mb-2">
+                                  Preston Miller
+                                </h5>
+                                <p class="mb-1">
+                                  4450 Fancher Drive Dallas, TX 75247
+                                </p>
+                                <p class="mb-1">PrestonMiller@armyspy.com</p>
+                                <p>001-234-5678</p>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="text-muted text-sm-end">
+                                <div>
+                                  <h5 class="font-size-16 mb-1">Invoice No:</h5>
+                                  <p>#MN0131</p>
+                                </div>
+                                <div class="mt-4">
+                                  <h5 class="font-size-16 mb-1">
+                                    Invoice Date:
+                                  </h5>
+                                  <p>09 Jul, 2020</p>
+                                </div>
+                                <div class="mt-4">
+                                  <h5 class="font-size-16 mb-1">Order No:</h5>
+                                  <p>#1123456</p>
+                                </div>
+                              </div>
+                            </div> -->
+                            <table style="width: 100%">
+                              <tr>
+                                <th class="tborder">Customer Name</th>
+                                <td class="tborder"></td>
+
+                                <td colspan="2" class="tborder">VIP SITE</td>
+                                <th class="tborder">Date</th>
+                                <td class="tborder">09-SEP-2021</td>
+                              </tr>
+                              <tr>
+                                <th class="tborder">Billing Address</th>
+
+                                <td class="tborder"></td>
+                                <td class="tborder">
+                                  P-420, Kazi Nazrul Islam Avenue KolkataWB
+                                  Kolkata, WEST BENGAL, 700052, India.
+                                </td>
+                                <td class="tborder">
+                                  <tr class="tborder-Bottom">
+                                    <th class="tborder-right">Order No</th>
+                                    <td>2131234422</td>
+                                  </tr>
+                                  <tr class="tborder-Bottom">
+                                    <th class="tborder-right">Reference No.</th>
+                                    <td>2131234422</td>
+                                  </tr>
+                                  <tr>
+                                    <th class="tborder-right">Payment Terms</th>
+                                    <td>IMMIDEATE</td>
+                                  </tr>
+                                </td>
+                                <th class="tborder">
+                                  <tr class="tborder-Bottom">
+                                    <th>Dispatch Date</th>
+                                  </tr>
+                                  <tr>
+                                    <th></th>
+                                  </tr>
+                                  <tr>
+                                    <th>GST IN No.</th>
+                                  </tr>
+                                </th>
+                                <td class="tborder">
+                                  <tr>
+                                    <td></td>
+                                  </tr>
+                                  <tr class="tborder-Bottom">
+                                    <td></td>
+                                  </tr>
+                                  <tr>
+                                    <td></td>
+                                  </tr>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th class="tborder">Shipping Address</th>
+
+                                <td class="tborder"></td>
+                                <td class="tborder">
+                                  P-420, Kazi Nazrul Islam Avenue KolkataWB
+                                  Kolkata, WEST BENGAL, 700052, India.
+                                </td>
+                                <!-- <td class="tborder">
+                                  <tr class="tborder-Bottom">
+                                    <th class="tborder-right">Customer Balance</th>
+                                    <td>2131234422</td>
+                                  </tr>
+                                  <tr>
+                                    <th class="tborder-right">Transporter Name</th>
+                                    <td>2131234422</td>
+                                  </tr>
+                                </td> -->
+                                <td class="tborder">
+                                  <tr
+                                    class="tborder-Bottom"
+                                    style="height: 60px"
+                                  >
+                                    <th class="tborder-right">
+                                      Customer Balance
+                                    </th>
+                                    <td></td>
+                                  </tr>
+
+                                  <tr style="height: 60px">
+                                    <th class="tborder-right">
+                                      Transporter Name
+                                    </th>
+                                    <td>2131234422</td>
+                                  </tr>
+                                </td>
+                                <th class="tborder">
+                                  <tr>
+                                    <th></th>
+                                  </tr>
+                                  <tr>
+                                    <th>PAN No.</th>
+                                  </tr>
+                                </th>
+                                <td class="tborder">
+                                  <tr>
+                                    <td></td>
+                                  </tr>
+                                  <tr>
+                                    <td></td>
+                                  </tr>
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+
+                          <!-- Table details
+                           -->
+
+                          <div class="">
+                            <div class="table-responsive">
+                              <table
+                                class="table table-centered mb-0 tBorderOverall"
+                                style="width: 100%"
+                              >
+                                <thead>
+                                  <tr>
+                                    <th>Particulars</th>
+                                    <th>HSN Code</th>
+                                    <th>Batch No.</th>
+                                    <th>Rate</th>
+                                    <th>QTY</th>
+                                    <th>On Hand QTY</th>
+                                    <th>Avl QTY</th>
+                                    <th>UOM</th>
+                                    <th>Amount</th>
+                                    <th>GST RATE</th>
+                                    <th>GST AMT</th>
+                                    <th>Total Amount</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr
+                                    class="tr-borders"
+                                    *ngFor="
+                                      let item of [
+                                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+                                      ]
+                                    "
+                                  >
+                                    <td>MOONG DAL FRIED 32g (300 Pou)</td>
+                                    <td>2106</td>
+                                    <td>00021G12</td>
+                                    <td>5.85</td>
+                                    <td>900</td>
+                                    <td>30900</td>
+                                    <td>41090.00</td>
+                                    <td>POU</td>
+                                    <td>5265</td>
+                                    <td>12</td>
+                                    <td>631</td>
+                                    <td>5896</td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colspan="11"
+                                      class="border-0 text-end"
+                                    >
+                                      Gross Total :
+                                    </th>
+                                    <td class="border-0 text-end">$510.00</td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colspan="11"
+                                      class="border-0 text-end"
+                                    >
+                                      Discount :
+                                    </th>
+                                    <td class="border-0 text-end">- $50.00</td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colspan="11"
+                                      class="border-0 text-end"
+                                    >
+                                      Shipping Charge :
+                                    </th>
+                                    <td class="border-0 text-end">$25.00</td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colspan="11"
+                                      class="border-0 text-end"
+                                    >
+                                      Tax :
+                                    </th>
+                                    <td class="border-0 text-end">$13.00</td>
+                                  </tr>
+                                  <tr>
+                                    <th
+                                      scope="row"
+                                      colspan="11"
+                                      class="border-0 text-end"
+                                    >
+                                      Total :
+                                    </th>
+                                    <td class="border-0 text-end">$498.00</td>
+                                  </tr>
+                                </tbody>
+                                <tfoot>
+                                  <tr class="tborder">
+                                    <th>Remarks</th>
+
+                                    <td colspan="11"></td>
+                                  </tr>
+                                  <tr class="tborder">
+                                    <th>Prepared By</th>
+                                    <td>SYSADMIN</td>
+                                    <td colspan="8"></td>
+                                    <th>Authorized By</th>
+                                    <td></td>
+                                  </tr>
+                                </tfoot>
+                              </table>
+                            </div>
+                            <div class="d-print-none mt-4">
+                              <div class="float-end">
+                                <a
+                                  href="javascript:window.print()"
+                                  class="
+                                    btn btn-success
+                                    waves-effect waves-light
+                                    me-1
+                                  "
+                                  ><i class="fa fa-print"></i
+                                ></a>
+                                <a
+                                  (click)="tableView()"
+                                  class="
+                                    btn btn-primary
+                                    w-md
+                                    waves-effect waves-light
+                                  "
+                                  >Back</a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- end row -->
+                </div>
+                <!-- container-fluid -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="addForm">
+          <div class="card">
+            <div class="card-body">
+              <div class="col-md-12">
+                <h3>Header Items</h3>
+                <hr />
+              </div>
+              <div class="col-md-12">
+                <div class="row">
+                 
+                  <div class="col-md-4 pl-3 mt-2">
+                    <div class="form-group">
+                      <label
+                        >Shipping To <span class="color-red">*</span></label
+                      >
+                      <div class="ui-grid ui-grid-responsive ui-fluid">
+                        <div class="ui-grid-row">
+                          <div class="ui-grid-col-12">
+                            <p-dropdown
+                              [autoWidth]="false"
+                              [options]="shipTo"
+                              [(ngModel)]="ship_to"
+                              [filter]="true"
+                              [style]="{ overflow: 'visible', width: '100%' }"
+                              class="pwip"
+                              (onChange)="shipToChange($event.value)"
+
+                            ></p-dropdown>
+                          </div>
+                        </div>
+                      </div>
+                     
+                    </div>
+                  </div>
+                  <div class="col-md-4 pl-3 mt-2">
+                    <div class="form-group">
+                      <label>Billing To <span class="color-red">*</span></label>
+                      
+                      <!-- <input type="text" [(ngModel)]="bill_to_add" name="bill_to_add" class="form-control" disabled > -->
+                      <p-dropdown
+                        [options]="billTo"
+                        [(ngModel)]="bill_to"
+                        [filter]="true"
+                        [style]="{ overflow: 'visible', width: '100%' }"
+                        autoWidth="false"
+                        appendTo="body"
+                        [disabled]="disableCasteDropdown"
+                      ></p-dropdown>
+                    </div>
+                  </div>
+                  <div class="col-md-4 pr-3 mt-2">
+                    <div class="form-group">
+                      <label>Order Type <span class="color-red">*</span></label>
+                      <!-- <input
+                        class="form-control"
+                        type="text"
+                        [(ngModel)]="p_order_type_id"
+                        placeholder="Order Type"
+                      /> -->
+                      <p-dropdown
+                        [options]="order"
+                        [(ngModel)]="p_order_type_id"
+                        [filter]="true"
+                        [style]="{ overflow: 'visible', width: '100%' }"
+                        autoWidth="false"
+                      ></p-dropdown>
+                      <!-- <select
+                          class="form-control"
+                          [(ngModel)]="p_order_type_id"
+                          id="exampleFormControlSelect1"
+                        >
+                          <option>Select Order Type</option>
+                          <option value="1061">Haldiram Order</option>
+                        </select> -->
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-md-6 pl-3 mt-2">
+                    <div class="form-group">
+                      <label>Price List<span class="color-red">*</span></label>
+                      <p-dropdown
+                        [options]="priceListD"
+                        [(ngModel)]="p_price_list_id"
+                        [filter]="true"
+                        [style]="{ overflow: 'visible', width: '100%' }"
+                        autoWidth="false"
+                      ></p-dropdown>
+                    </div>
+                  </div> -->
+
+                  <!-- <div class="col-md-4 pl-3 mt-2">
+                    <div class="form-group">
+                      <label>Inventory Org</label>
+
+                      <p-dropdown
+                        (onChange)="invChange()"
+                        [options]="inventory"
+                        [(ngModel)]="p_ship_from_org_id"
+                        [filter]="true"
+                        [style]="{ overflow: 'visible', width: '100%' }"
+                        autoWidth="false"
+                      ></p-dropdown>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+              <form>
+                <div class="col-md-12 mt-5">
+                  <div class="row">
+                    <div class="col-6"><h3>Line Items</h3></div>
+                    <div class="col-6 text-end">
+                      <button
+                        (click)="addOrderRow()"
+                        class="btn btn-success"
+                        aria-hidden="true"
+                        *ngIf="hideButton"
+                      >
+                        <i class="fa fa-plus"></i><b class="m-1"> Add</b>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class="col-md-12" [formGroup]="orderForm">
+                  <div class="card">
+                    <div class="table-responsive">
+                      <div formGroupName="orderDetails">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>S.NO</th>
+                              <th>Items</th>
+                              <th>Quantity</th>
+                              <th>UOM</th>
+                              <!-- <th>Price</th> -->
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr
+                              *ngFor="
+                                let address of orderForm['controls'][
+                                  'orderDetails'
+                                ]['controls'];
+                                let i = index
+                              "
+                              [formGroupName]="i"
+                            >
+                              <td>{{ i + 1 }}</td>
+
+                              <td>
+                                <!-- <input
+                                  type="number"
+                                  min="1"
+                                  class="form-control textarea1"
+                                  placeholder="Quantity"
+                                  formControlName="p_item_id"
+                                  /> -->
+                                <p-dropdown
+                                  [options]="itemLists"
+                                  [itemSize]="31"
+                                  formControlName="p_item_id"
+                                  [filter]="true"
+                                  [style]="{
+                                    overflow: 'visible',
+                                    width: '100%'
+                                  }"
+                                  autoWidth="true"
+                                  appendTo="body"
+                                  (onChange)="itemOnChange($event.value, i)"
+                                ></p-dropdown>
+                                <!-- <select
+                                  (change)="itemOnChange($event, i)"
+                                  class="form-control"
+                                  formControlName="p_item_id"
+                                >
+                                  <option
+                                    *ngFor="let item of itemLists"
+                                    value="{{ item.value }}"
+                                  >
+                                    {{ item.label }}
+                                  </option>
+                                </select> -->
+                              </td>
+
+                              <td>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  class="form-control textarea1"
+                                  placeholder="Quantity"
+                                  formControlName="p_ordered_quantity"
+                                />
+                              </td>
+                              <td>
+                                <select
+                                  class="form-control"
+                                  formControlName="UNIT_OF_MEASURE"
+                                  (change)="uomChange(i, $event)"
+                                >
+                                  <option value="">Select UOM</option>
+                                  <option
+                                    *ngFor="let item of uomDropDown"
+                                    value="{{ item.id }}"
+                                  >
+                                    {{ item.value }}
+                                  </option>
+                                </select>
+                                <!-- <input
+                                  disabled
+                                  type="text"
+                                  class="form-control textarea1"
+                                  placeholder="UOM"
+                                  formControlName="p_uom"
+                                /> -->
+                              </td>
+                              <!-- <td>
+                                <input
+                                  disabled
+                                  type="number"
+                                  min="1"
+                                  class="form-control textarea1"
+                                  placeholder="Price"
+                                  formControlName="p_item_price"
+                                />
+                              </td> -->
+                              <td>
+                                <a (click)="removeOrderRow(i)">
+                                  <i
+                                    class="fa fa-trash fa-lg color-red m-2"
+                                    aria-hidden="true"
+                                  ></i>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+
+                          <tbody *ngIf="spinner">
+                            <tr>
+                              <td colspan="12">
+                                <div
+                                  class="d-flex justify-content-center"
+                                  *ngIf="spinner"
+                                >
+                                  <div class="spinner-border" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  &nbsp;&nbsp;
+                  <button
+                    style="float: right"
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                    (click)="back()"
+                  >
+                    Close
+                  </button>
+                  &nbsp;&nbsp;
+                  <button
+                    style="float: right; position: relative; right: 10px"
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-dismiss="modal"
+                    (click)="save()"
+                  >
+                    Save
+                  </button>
+                  &nbsp;&nbsp;
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+  </div>
+  <!-- end main content-->
+</div>
+<!-- END layout-wrapper -->
+<!-- Button trigger modal -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<p-dialog
+  header="Items List"
+  [(visible)]="displayModal"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [baseZIndex]="10000"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="col s12 table">
+    <table>
+      <tr>
+        <th>s.no</th>
+        <th>Item</th>
+        <th>Item Description</th>
+        <th>Item Type</th>
+        <th>QTY</th>
+      </tr>
+      <tr *ngFor="let item of linesData; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ item.ORDERED_ITEM }}</td>
+        <td>{{ item.ITEM }}</td>
+        <td>{{ item.PRODUCT_TYPE }}</td>
+        <td>{{ item.ORDERED_QUANTITY }}</td>
+      </tr>
+    </table>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      class="btn btn-danger posright10 float-right"
+      (click)="cancelOrder(linesData)"
+    >
+      Cancel Order
+    </button>
+    <button
+      class="btn btn-primary posright10 float-righ"
+      (click)="closeModalDialog()"
+    >
+      Close
+    </button>
+  </ng-template>
+</p-dialog>
+<p-dialog
+  header="Do you want to request the Cancellation of Order #{{ ordNum }}"
+  [(visible)]="displayModal1"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [baseZIndex]="10000"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="col s12 table">
+    <textarea
+      name=""
+      id=""
+      cols="30"
+      rows="10"
+      class="form-control"
+      [(ngModel)]="remarks"
+    ></textarea>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      class="btn btn-danger posright10 float-right"
+      (click)="cancelOrderSave()"
+    >
+      Cancel Order
+    </button>
+    <button
+      class="btn btn-primary posright10 float-righ"
+      (click)="closeModalDialog()"
+    >
+      Close
+    </button>
+  </ng-template>
+</p-dialog>

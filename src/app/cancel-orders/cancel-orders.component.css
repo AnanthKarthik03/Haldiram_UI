@@ -1,0 +1,65 @@
+.input {
+    border: none;
+    border-bottom: 2px solid gray;
+    outline: none;
+    width: 95%;
+  }
+  
+  @media (max-width:430px) {}
+  
+  .img-fluid {
+    max-width: 100%;
+    height: auto;
+    width: 200px;
+  }
+  
+  .tborder {
+    border: 1px solid black;
+    border-collapse: collapse;
+   }
+  
+   .tborder-Bottom{
+       border-bottom: 1px solid black;
+  }
+  
+  /* table {
+    border: 1px solid black;
+    border-collapse: collapse;
+  } */
+  th, td {
+    /* padding: 3px; */
+    text-align: center;    
+  }
+  
+   table td {width:200px; word-wrap:break-word;}
+  
+   .tborder-right{
+     border-right: 1px solid black;
+   }
+  
+   .tBorderOverall th,
+   .tBorderOverall td,
+   .tBorderOverall tr {
+        border-color: inherit;
+        border-style: solid;
+        border-width: 0;
+        border: 1px solid black;
+        border-collapse: collapse;
+   }
+   
+  
+   .tBorderOverall {
+    border: 1px solid black !important;
+    border-collapse: collapse !important;
+  }
+  
+  .table>:not(:last-child)>:last-child>* {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  
+  
+  [data-hidden="true"]
+  {
+    display: none !important
+  }

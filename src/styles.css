@@ -1,0 +1,36 @@
+/* You can add global styles to this file, and also import other style files */
+.color-white {
+  color: white;
+  font-weight: 500;
+}
+.color-red {
+  color: red;
+}
+.color-green{
+    color: rgb(126, 153, 126);
+}
+
+.pointer {
+  cursor: pointer;
+}
+.cursor{
+  cursor: default;
+}
+.p-responsive{
+  width: 100% !important;
+}
+.pwip .ui-dropdown .ui-dropdown-label {
+  width: 360px !important;
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 0 none;
+  color: #495057;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+  white-space: break-spaces !important;
+  width: 360px !important;
+}

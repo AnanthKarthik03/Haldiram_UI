@@ -1,0 +1,274 @@
+<div id="layout-wrapper">
+  <app-header></app-header>
+  <!-- ========== Left Sidebar Start ========== -->
+  <app-sidebar></app-sidebar>
+  <!-- Left Sidebar End -->
+
+  <!-- ============================================================== -->
+  <!-- Start right Content here -->
+  <!-- ============================================================== -->
+  <div class="main-content">
+    <div class="page-content">
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row no-print">
+          <div class="col-12">
+            <div
+              class="page-title-box d-flex align-items-center justify-content-between"
+            >
+              <h4 class="mb-0 cursor">Reports Details</h4>
+
+              <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                  <li
+                    class="breadcrumb-item pointer active"
+                    (click)="dashboard()"
+                  >
+                    Dashboard
+                  </li>
+                  <li class="breadcrumb-item cursor">Reports</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body no-print">
+              <div class="row">
+                <div class="col-md-2">
+                  <h4 class="mt-2 cursor">Reports</h4>
+                </div>
+                <div class="col-md-10 text-end">
+                  <div class="row">
+                    <div class="col-md-10">
+                      <p-calendar
+                        [(ngModel)]="fromDate"
+                        [showIcon]="true"
+                        inputId="icon"
+                        class="m-1"
+                      ></p-calendar>
+                      <p-calendar
+                        [(ngModel)]="toDate"
+                        (onSelect)="dateChange()"
+                        [showIcon]="true"
+                        inputId="icon"
+                        class="m-1"
+                      ></p-calendar>
+                    </div>
+                    <div class="col-md-2">
+                      <button
+                        type="button"
+                        class="btn btn-primary m-1"
+                        (click)="excelDownload()"
+                      >
+                        Excel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <p-table
+                      [scrollable]="true"
+                      [style]="{ width: '100%' }"
+                      #dt1
+                      [value]="reportList"
+                      dataKey="id"
+                      [rows]="10"
+                      [showCurrentPageReport]="true"
+                      [rowsPerPageOptions]="[10, 25, 50]"
+                      styleClass="p-datatable-customers p-datatable-gridlines p-datatable-responsive-demo"
+                      [paginator]="true"
+                      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                    >
+                      <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                          <col style="width: 70px" />
+                          <col style="width: 160px" />
+                          <col style="width: 125px" />
+                          <col style="width: 260px" />
+                          <!-- <col style="width: 200px" />
+                          <col style="width: 180px" />
+                          <col style="width: 130px" />
+                          <col style="width: 133px" />
+                          <col style="width: 173px" /> -->
+                          <col style="width: 140px" />
+                        </colgroup>
+                      </ng-template>
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              S.NO
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Order Number
+                              <p-columnFilter
+                                type="text"
+                                field="OrderNO"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Order Date
+                            </div>
+                          </th>
+
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Customer Name
+                              <p-columnFilter
+                                type="text"
+                                field="CustomerName"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                          <!-- <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Item Name
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Item Category
+
+                              <p-columnFilter
+                                type="text"
+                                field="ItemCategory"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Order Qty
+                            </div>
+                          </th>
+
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Received Qty
+                            </div>
+                          </th>
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Short/ Excess Qty
+                            </div>
+                          </th> -->
+
+                          <!-- new -->
+                          <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                              Order Status
+                              <p-columnFilter
+                                type="text"
+                                field="OrderStatus"
+                                display="menu"
+                              ></p-columnFilter>
+                            </div>
+                          </th>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template
+                        pTemplate="body"
+                        let-reportList
+                        let-i="rowIndex"
+                      >
+                        <tr>
+                          <td>{{ i + 1 }}</td>
+                          <td>
+                            {{ reportList.OrderNO }}
+                          </td>
+                          <td>{{ reportList.OrderDate | date }}</td>
+
+                          <td>
+                            {{
+                              reportList.CustomerName
+                                ? reportList.CustomerName
+                                : "-"
+                            }}
+                          </td>
+                          <!-- <td
+                            style="
+                              white-space: nowrap;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                              padding: 5px;
+                            "
+                            title="{{ reportList.ItemName }}"
+                          >
+                            {{
+                              reportList.ItemName ? reportList.ItemName : "-"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              reportList.ItemCategory
+                                ? reportList.ItemCategory
+                                : "-"
+                            }}
+                          </td>
+                          <td>{{ reportList.OrderQty }}</td>
+                          <td>{{ reportList.ReceivedQty }}</td>
+                          <td>{{ reportList.ShortExcessQty }}</td> -->
+                          <td>
+                            {{
+                              reportList.OrderStatus
+                                ? reportList.OrderStatus
+                                : "-"
+                            }}
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="emptymessage">
+                        <tr *ngIf="!spinner">
+                          <td colspan="5" style="text-align: center">
+                            No Data found
+                          </td>
+                        </tr>
+                        <tr *ngIf="spinner">
+                          <td colspan="5" style="text-align: center">
+                            <p-progressSpinner
+                              [style]="{ width: '60px', height: '70px' }"
+                              strokeWidth="4"
+                            ></p-progressSpinner>
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+  </div>
+  <!-- end main content-->
+</div>
+<!-- END layout-wrapper -->
+<!-- Button trigger modal -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
