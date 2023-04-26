@@ -67,6 +67,7 @@ export class OrdersComponent implements OnInit {
   uomDataDisplay = {};
   creditCheck = null;
   customerCounts = 0;
+  totalCount = 0;
   checkPoint = null;
   ngOnInit(): void {
     this.invChange();
@@ -129,8 +130,6 @@ export class OrdersComponent implements OnInit {
     this.displayModal = true;
     this.ordNum = id;
     this.linesData = _.filter(this.orderListD, (item) => item.ORD_NUM === id);
-
-    console.log(this.linesData);
   }
 
   // tslint:disable-next-line:typedef
@@ -145,7 +144,6 @@ export class OrdersComponent implements OnInit {
       to_dt: moment(dt2).format('DD-MM-YYYY'),
       cond: id,
     };
-    console.log(body);
     this.service.postOrderList(body).subscribe((data) => {
       if (data.success) {
         this.finalArray = _.uniq(data['data'], 'ORD_NUM');
@@ -195,7 +193,6 @@ export class OrdersComponent implements OnInit {
               : 0,
           });
         });
-        console.log(this.orderListD);
         // this.orderNumber = data.data[0].ORD_NUM.toString();
       }
     });
@@ -220,8 +217,6 @@ export class OrdersComponent implements OnInit {
           label: 'Select Item',
           value: null,
         });
-
-        console.log(this.itemLists);
       } else {
       }
     });
@@ -246,10 +241,7 @@ export class OrdersComponent implements OnInit {
           label: 'Select Item',
           value: null,
         });
-
-        console.log('0001', this.listItem);
       } else {
-        console.log('Null');
       }
     });
   }
@@ -274,8 +266,6 @@ export class OrdersComponent implements OnInit {
           label: 'Select Inventory',
           value: null,
         });
-
-        console.log(this.inventory);
       } else {
       }
     });
@@ -296,8 +286,6 @@ export class OrdersComponent implements OnInit {
           label: 'Select order Type',
           value: null,
         });
-
-        console.log(this.order);
       } else {
       }
     });
@@ -325,7 +313,6 @@ export class OrdersComponent implements OnInit {
     this.service.getLocation().subscribe((data) => {
       // tslint:disable-next-line:no-string-literal
       if (data['success']) {
-        console.log(data);
         this.billToArr = data.bill_list;
         this.shipToArr = data.data;
         // tslint:disable-next-line:no-string-literal
@@ -349,8 +336,6 @@ export class OrdersComponent implements OnInit {
           label: 'Select Location',
           value: null,
         });
-
-        console.log(this.shipTo);
       } else {
         this.shipTo = [];
       }
@@ -370,7 +355,6 @@ export class OrdersComponent implements OnInit {
   // tslint:disable-next-line:typedef
   addOrderRow() {
     this.isLast = this.isLast + 1;
-    console.log(this.isLast);
     const control = this.orderForm.controls.orderDetails as FormArray;
     control.push(this.pomanualInfo());
   }
@@ -390,6 +374,15 @@ export class OrdersComponent implements OnInit {
       // OPEN: 7322299.87
       // TOTALBALANCE: "91468.57 Dr."
       this.customerCounts = data['data'][0].CREDIT ? data['data'][0].CREDIT : 0;
+      console.log("customerCounts", this.customerCounts);
+    
+      if (data['data'][0].TOTALBALANCE.slice(-3) === "Cr.") {
+        this.totalCount = data['data'][0].OPEN - parseInt(data['data'][0].TOTALBALANCE);
+        console.log("totalCount", this.totalCount)
+      } else {
+        this.totalCount = data['data'][0].OPEN + parseInt(data['data'][0].TOTALBALANCE);
+        console.log("totalCount", this.totalCount)
+      }
     });
   }
 
@@ -401,25 +394,23 @@ export class OrdersComponent implements OnInit {
   // tslint:disable-next-line:typedef
   save() {
     this.creditCheck = null;
-    let totalCost = 0;
+    let itemCost = 0;
+    let TotalCost = 0;
     this.spinner = true;
     const finalArray = [];
     console.log(this.orderForm.value.orderDetails);
     this.orderForm.value.orderDetails.forEach((ele) => {
-      totalCost += parseFloat(ele.p_item_price);
+      itemCost += parseFloat(ele.p_item_price) * ele.p_ordered_quantity;
+      TotalCost = this.totalCount + itemCost;
       console.log('res', ele.p_item_price);
-      console.log('ressss', typeof totalCost);
+      console.log('ressss', itemCost);
     });
-    console.log('this.customerCounts', typeof this.customerCounts);
-    console.log(
-      this.customerCounts > totalCost,
-      this.customerCounts,
-      totalCost
-    );
-    if (this.customerCounts > totalCost) {
-      this.checkPoint = 0;
-    } else {
+    console.log('this.customerCounts', this.customerCounts);
+    console.log('TotalCost', TotalCost);
+    if (this.customerCounts > TotalCost) {
       this.checkPoint = 1;
+    } else {
+      this.checkPoint = 0;
     }
 
     if (this.checkPoint === 0 || this.checkPoint === 1) {
@@ -516,11 +507,9 @@ export class OrdersComponent implements OnInit {
   }
   uomChange(i, e) {
     this.hideButton = true;
-    console.log(i, e.target.value);
     // this.orderForm.controls.orderDetails['controls'][
     //   i
     // ].controls.p_item_price.setValue(dd[0].unit_price.toFixed(2));
-    console.log(this.orderForm.value.orderDetails[i]);
 
     const body = {
       name: this.p_price_list_id,
@@ -528,16 +517,12 @@ export class OrdersComponent implements OnInit {
       uom: this.orderForm.value.orderDetails[i].UNIT_OF_MEASURE,
     };
 
-    console.log(body);
-
     this.service.get_advance_pricing(body).subscribe((data) => {
       if (data['data'].length > 0) {
-        console.log(data['data']);
         this.orderForm.controls.orderDetails['controls'][
           i
         ].controls.p_item_price.setValue(data['data'][0].priceList.toFixed(2));
       } else {
-        console.log(`nodata`);
 
         const dd = _.filter(
           this.listItem,
@@ -545,10 +530,8 @@ export class OrdersComponent implements OnInit {
             parseInt(item.item_id, 10) ===
             parseInt(this.orderForm.value.orderDetails[i].p_item_id, 10)
         );
-        console.log('itemFilter', dd);
 
         if (dd.length > 0) {
-          console.log(this.orderForm);
 
           this.orderForm.controls.orderDetails['controls'][
             i
@@ -593,7 +576,6 @@ export class OrdersComponent implements OnInit {
     if (this.reqId === '') {
       this.reqId = this.getRId(id);
     }
-    console.log(`sdfsdf`, this.reqId);
 
     if (this.reqId) {
       this.toastr.warning('Please wait while we are fetching the PDF!!');
@@ -604,7 +586,6 @@ export class OrdersComponent implements OnInit {
           })
           .subscribe((data) => {
             if (data['success']) {
-              console.log(data);
               window.open(
                 `https://pfoodapp.prabhujihaldiram.com/customPortal/server/statements/XXHBL_SO_ONHAND_PRINT_${this.reqId}_1.PDF`,
                 '_blank'
@@ -636,12 +617,10 @@ export class OrdersComponent implements OnInit {
   cancelOrder(item) {
     this.displayModal = false;
     this.displayModal1 = true;
-    console.log(item);
     this.cancelOrderData = item;
   }
 
   cancelOrderSave() {
-    console.log(this.cancelOrderData);
     let itemsList = [];
     this.cancelOrderData.forEach((item) => {
       itemsList.push('<br>' + item.ORDERED_ITEM + '-' + item.ITEM);
@@ -652,8 +631,6 @@ export class OrdersComponent implements OnInit {
         item: itemsList.toString(),
         remarks: this.remarks,
       };
-
-      console.log(body);
 
       this.service.cancel_orders(body).subscribe((data) => {
         if (data['success']) {
@@ -669,20 +646,15 @@ export class OrdersComponent implements OnInit {
   }
 
   invChange() {
-    console.log(this.p_ship_from_org_id);
-
     this.service.getUomList(141).subscribe((data) => {
       if (data['success']) {
         this.uomList = data['prices'];
-
-        console.log(this.uomList);
       }
     });
   }
 
   getTotalAmount(id) {
     const data = _.filter(this.orderListD, (item) => item.ORD_NUM === id);
-    // console.log(data);
     let tot = 0;
     data.forEach((ele) => {
       tot += parseInt(ele.TOTAL_AMOUNT, 10);
@@ -692,9 +664,6 @@ export class OrdersComponent implements OnInit {
   }
 
   shipToChange(e) {
-    console.log(e);
-    console.log(this.billToArr);
-    console.log(this.shipToArr);
 
     const shipLinkId = _.filter(
       this.shipToArr,
@@ -702,15 +671,10 @@ export class OrdersComponent implements OnInit {
     );
 
     if (shipLinkId && shipLinkId.length > 0) {
-      console.log(shipLinkId[0].linkId);
-
       const billLinkId = _.filter(
         this.billToArr,
         (item) => parseInt(item.linkId, 10) === shipLinkId[0].linkId
       );
-      console.log(billLinkId[0].bill_site_id);
-      console.log(billLinkId);
-
       if (billLinkId && billLinkId.length > 0) {
         this.bill_to = billLinkId[0].bill_site_id;
         this.p_sold_to_org_id = billLinkId[0].cust_account_id;
